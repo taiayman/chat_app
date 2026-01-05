@@ -56,32 +56,38 @@ export default function AIChat() {
         };
 
         setMessages(prev => [...prev, userMessage]);
+        const userInput = inputValue;
         setInputValue("");
         setIsTyping(true);
 
-        // Simulate AI response (replace with actual AI API call)
-        setTimeout(() => {
+        try {
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            });
+
+            const data = await response.json();
+
             const aiMessage: AIMessage = {
                 id: `ai-${Date.now()}`,
                 role: 'assistant',
-                content: getAIResponse(inputValue),
+                content: data.response || 'Sorry, I could not generate a response.',
                 time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
             };
             setMessages(prev => [...prev, aiMessage]);
+        } catch (error) {
+            console.error('Error calling AI:', error);
+            const errorMessage: AIMessage = {
+                id: `ai-${Date.now()}`,
+                role: 'assistant',
+                content: 'Sorry, something went wrong. Please try again.',
+                time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
             setIsTyping(false);
-        }, 1000 + Math.random() * 1000);
-    };
-
-    const getAIResponse = (input: string): string => {
-        // Simple demo responses
-        const responses = [
-            "That's a great question! Let me think about that...",
-            "I'd be happy to help you with that!",
-            "Here's what I found for you...",
-            "Interesting! Could you tell me more?",
-            "I understand. Let me provide some insights.",
-        ];
-        return responses[Math.floor(Math.random() * responses.length)];
+        }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -165,8 +171,8 @@ export default function AIChat() {
                                     <div className={`flex flex-col gap-1 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                                         <div
                                             className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                                    ? 'bg-[#1E9A80] text-white rounded-br-sm'
-                                                    : 'bg-[#f3f3ee] text-zinc-800 rounded-bl-sm'
+                                                ? 'bg-[#1E9A80] text-white rounded-br-sm'
+                                                : 'bg-[#f3f3ee] text-zinc-800 rounded-bl-sm'
                                                 }`}
                                         >
                                             {msg.content}
@@ -215,8 +221,8 @@ export default function AIChat() {
                                     onClick={handleSend}
                                     disabled={!inputValue.trim() || isTyping}
                                     className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${inputValue.trim() && !isTyping
-                                            ? 'bg-[#1E9A80] text-white cursor-pointer hover:bg-[#178a72]'
-                                            : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'
+                                        ? 'bg-[#1E9A80] text-white cursor-pointer hover:bg-[#178a72]'
+                                        : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'
                                         }`}
                                 >
                                     <Send className="h-4 w-4" />
