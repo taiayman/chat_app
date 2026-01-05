@@ -146,21 +146,21 @@ export default function LoginPage() {
                             </div>
 
                             {/* Email Input */}
-                            <div className="space-y-3">
+                            <div className="space-y-3 opacity-50">
                                 <div className="space-y-1.5">
                                     <Input
                                         type="email"
                                         placeholder="name@work-email.com"
-                                        className="h-10 bg-white border-2 border-zinc-200 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-[#1E9A80] focus-visible:border-[#1E9A80] rounded-xl text-sm shadow-none transition-all"
+                                        disabled
+                                        className="h-10 bg-white border-2 border-zinc-200 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-[#1E9A80] focus-visible:border-[#1E9A80] rounded-xl text-sm shadow-none transition-all cursor-not-allowed"
                                     />
                                 </div>
-                                <Link href="/chat" className="block w-full">
-                                    <Button
-                                        className="w-full h-10 bg-[#1E9A80] hover:bg-[#188f75] text-white rounded-xl text-sm font-medium tracking-wide shadow-none hover:shadow-none"
-                                    >
-                                        Continue with Email
-                                    </Button>
-                                </Link>
+                                <Button
+                                    disabled
+                                    className="w-full h-10 bg-[#1E9A80] text-white rounded-xl text-sm font-medium tracking-wide shadow-none cursor-not-allowed"
+                                >
+                                    Continue with Email
+                                </Button>
                             </div>
 
                             {/* Disclaimer */}
