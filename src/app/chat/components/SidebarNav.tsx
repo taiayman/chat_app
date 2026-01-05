@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import React from "react";
 import {
   Home,
@@ -170,7 +171,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             </div>
             <Separator className="my-1 bg-zinc-100" />
             <div className="px-2 py-1.5">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer"
+                onClick={() => signOut({ callbackUrl: "/login" })}
+              >
                 <LogOut className="h-4 w-4" /> Log out
               </Button>
             </div>

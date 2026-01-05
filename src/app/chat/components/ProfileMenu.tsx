@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import React from "react";
 import {
   Pencil,
@@ -104,7 +105,10 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
         <div className="h-px bg-[#D1D5DB] my-3" />
 
         {/* Logout Section */}
-        <div className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity">
+        <div
+          className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => signOut({ callbackUrl: "/login" })}
+        >
           <div className="h-8 w-8 bg-[#f7f7f5] rounded-lg flex items-center justify-center">
             <LogOut className="h-3.5 w-3.5 text-zinc-900" />
           </div>
