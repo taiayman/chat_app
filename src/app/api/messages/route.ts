@@ -11,6 +11,8 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
+        const currentUserId = session.user.id
+
         const { searchParams } = new URL(request.url)
         const userId = searchParams.get('userId')
 
@@ -22,8 +24,8 @@ export async function GET(request: NextRequest) {
         const messages = await prisma.message.findMany({
             where: {
                 OR: [
-                    { senderId: session.user.id, receiverId: userId },
-                    { senderId: userId, receiverId: session.user.id }
+                    { senderId: currentUserId, receiverId: userId },
+                    { senderId: userId, receiverId: currentUserId }
                 ]
             },
             orderBy: { createdAt: 'asc' },
@@ -41,7 +43,7 @@ export async function GET(request: NextRequest) {
         await prisma.message.updateMany({
             where: {
                 senderId: userId,
-                receiverId: session.user.id,
+                receiverId: currentUserId,
                 isRead: false
             },
             data: { isRead: true }
@@ -51,7 +53,7 @@ export async function GET(request: NextRequest) {
         const formattedMessages = messages.map(msg => ({
             id: msg.id,
             content: msg.content,
-            sender: msg.senderId === session.user.id ? 'me' : 'them',
+            sender: msg.senderId === currentUserId ? 'me' : 'them',
             time: new Date(msg.createdAt).toLocaleTimeString('en-US', {
                 hour: 'numeric',
                 minute: '2-digit',
