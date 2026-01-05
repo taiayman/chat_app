@@ -10,7 +10,7 @@ import { ChatArea } from "./components/ChatArea";
 import { ContactInfoSidebar } from "./components/ContactInfoSidebar";
 import { ContextMenu } from "./components/ContextMenu";
 
-export default function Dashboard() {
+export default function Chat() {
   const [contacts, setContacts] = useState(initialContacts);
   const [activeTab, setActiveTab] = useState("chat");
   const [selectedContact, setSelectedContact] = useState(initialContacts[0]);

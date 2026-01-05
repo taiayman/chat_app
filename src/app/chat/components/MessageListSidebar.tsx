@@ -63,14 +63,14 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
   handleUnread,
 }) => {
   return (
-    <div className="w-[340px] bg-white rounded-2xl flex flex-col overflow-hidden">
+    <div className="w-[360px] bg-white rounded-2xl flex flex-col overflow-hidden">
       <div className="p-4 pb-2">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-bold text-zinc-800">All Message</h1>
           <div className="relative">
             <Button
               className={cn(
-                "bg-[#00A389] hover:bg-[#008f78] text-white rounded-lg px-3 py-1.5 h-8 gap-1.5 text-xs transition-colors",
+                "bg-[#00A389] hover:bg-[#008f78] text-white rounded-lg px-3 py-1.5 h-8 gap-1.5 text-xs transition-colors cursor-pointer",
                 showNewMessageModal && "bg-[#008f78]"
               )}
               onClick={() => setShowNewMessageModal(!showNewMessageModal)}
@@ -146,13 +146,13 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
               onChange={(e) => setSidebarSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg border-2 border-[#F2F2F0] bg-white text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50">
+          <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg border-2 border-[#F2F2F0] bg-white text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 cursor-pointer">
             <Filter className="h-3.5 w-3.5" />
           </Button>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 px-2">
+      <ScrollArea className="flex-1 pl-2 pr-3">
         <div className="flex flex-col gap-0.5 pb-3">
           {sidebarFilteredContacts.map((contact) => (
             <div
@@ -167,7 +167,7 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                 )}
               >
                 <button
-                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors"
+                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleUnread(contact.id);
@@ -184,7 +184,7 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                 className={cn(
                   "group flex items-center gap-2.5 p-2.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10",
                   selectedContact.id === contact.id ? "bg-[#f3f3ee]" : "hover:bg-[#f3f3ee]",
-                  archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "w-full",
+                  archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "w-[92%] mx-auto",
                   unreadId === contact.id ? "translate-x-[68px] w-[calc(100%-68px)] bg-[#f3f3ee]" : "translate-x-0"
                 )}
               >
@@ -231,7 +231,7 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                 )}
               >
                 <button
-                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors"
+                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleArchive(contact.id);

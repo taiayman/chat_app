@@ -114,7 +114,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
     <div className="flex-1 bg-white rounded-2xl flex flex-col min-h-0 overflow-hidden">
       {/* Chat Header */}
       <div className="px-3 py-3 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3 pl-1">
+        <div className="flex items-center gap-3 pl-1 cursor-pointer hover:bg-zinc-50 rounded-lg p-1 transition-colors">
           <Avatar className="h-9 w-9 border border-zinc-100">
             <AvatarImage src={selectedContact.avatar} />
             <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
@@ -130,16 +130,16 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-1.5 pr-1">
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50">
+          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
             <Search className="h-3.5 w-3.5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50">
+          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
             <Phone className="h-3.5 w-3.5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50">
+          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
             <Video className="h-3.5 w-3.5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50">
+          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
             <MoreHorizontal className="h-3.5 w-3.5" />
           </Button>
         </div>
@@ -190,16 +190,16 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
           />
           {/* Action Icons and Send Button inside input */}
           <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-3">
-            <button className="text-zinc-800 hover:text-zinc-900 transition-colors">
+            <button className="text-zinc-800 hover:text-zinc-900 transition-colors cursor-pointer">
               <Mic className="h-4 w-4" />
             </button>
-            <button className="text-zinc-800 hover:text-zinc-900 transition-colors">
+            <button className="text-zinc-800 hover:text-zinc-900 transition-colors cursor-pointer">
               <Smile className="h-4 w-4" />
             </button>
-            <button className="text-zinc-800 hover:text-zinc-900 transition-colors">
+            <button className="text-zinc-800 hover:text-zinc-900 transition-colors cursor-pointer">
               <Paperclip className="h-4 w-4" />
             </button>
-            <Button className="h-9 w-9 rounded-full bg-[#00A884] hover:bg-[#128C7E] text-white flex items-center justify-center p-0">
+            <Button className="h-9 w-9 rounded-full bg-[#00A884] hover:bg-[#128C7E] text-white flex items-center justify-center p-0 cursor-pointer">
               <Send className="h-4 w-4" />
             </Button>
           </div>

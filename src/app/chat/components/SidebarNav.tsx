@@ -48,7 +48,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           onClick={() => setShowProfileMenu(!showProfileMenu)}
         >
           <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 8.25V17.05H2.75C3.039 17.05 3.325 17.107 3.592 17.218C3.859 17.328 4.102 17.49 4.306 17.694C4.51 17.899 4.672 18.141 4.783 18.408C4.893 18.675 4.95 18.961 4.95 19.25V22H11.55L19.8 13.75V4.95H17.05C16.761 4.95 16.475 4.893 16.208 4.783C15.941 4.672 15.699 4.51 15.495 4.306C15.29 4.101 15.128 3.859 15.018 3.592C14.907 3.325 14.85 3.039 14.85 2.75V0H8.25L0 8.25ZM9.35 16.5H5.5V10.45L10.45 5.5H14.3V11.55L9.35 16.5Z" fill="white"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M0 8.25V17.05H2.75C3.039 17.05 3.325 17.107 3.592 17.218C3.859 17.328 4.102 17.49 4.306 17.694C4.51 17.899 4.672 18.141 4.783 18.408C4.893 18.675 4.95 18.961 4.95 19.25V22H11.55L19.8 13.75V4.95H17.05C16.761 4.95 16.475 4.893 16.208 4.783C15.941 4.672 15.699 4.51 15.495 4.306C15.29 4.101 15.128 3.859 15.018 3.592C14.907 3.325 14.85 3.039 14.85 2.75V0H8.25L0 8.25ZM9.35 16.5H5.5V10.45L10.45 5.5H14.3V11.55L9.35 16.5Z" fill="white" />
           </svg>
         </div>
 
@@ -56,7 +56,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         <nav className="flex flex-col items-center gap-3">
           <button
             className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all",
+              "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
               activeTab === "home" ? "bg-white" : "hover:bg-white/50"
             )}
             onClick={() => setActiveTab("home")}
@@ -66,7 +66,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
           <button
             className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all relative",
+              "h-10 w-10 rounded-xl flex items-center justify-center transition-all relative cursor-pointer",
               activeTab === "chat" ? "bg-white" : "hover:bg-white/50"
             )}
             onClick={() => setActiveTab("chat")}
@@ -76,7 +76,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
           <button
             className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all",
+              "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
               activeTab === "compass" ? "bg-white" : "hover:bg-white/50"
             )}
             onClick={() => setActiveTab("compass")}
@@ -86,7 +86,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
           <button
             className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all",
+              "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
               activeTab === "folder" ? "bg-white" : "hover:bg-white/50"
             )}
             onClick={() => setActiveTab("folder")}
@@ -96,7 +96,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
           <button
             className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all",
+              "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
               activeTab === "image" ? "bg-white" : "hover:bg-white/50"
             )}
             onClick={() => setActiveTab("image")}
@@ -108,28 +108,28 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
       {/* Bottom Section: Settings + Avatar */}
       <div className="flex flex-col items-center gap-3">
-        <button className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-white/50 transition-all">
+        <button className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-white/50 transition-all cursor-pointer">
           <Sparkles className="h-4 w-4 text-[#151515]" />
         </button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="h-10 w-10 rounded-full overflow-hidden">
+            <button className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
               <Avatar className="h-10 w-10">
                 <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="right" align="end" className="w-64 p-2 rounded-2xl border-none ml-4">
+          <DropdownMenuContent side="right" align="end" className="w-64 p-2 rounded-2xl border-none ml-2">
             <div className="px-2 py-1.5">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2">
-                <LayoutDashboard className="h-4 w-4" /> Go back to dashboard
+              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
+                <LayoutDashboard className="h-4 w-4" /> Go back
               </Button>
             </div>
             <Separator className="my-1 bg-zinc-100" />
             <div className="px-2 py-1.5">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2">
+              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
                 <Pencil className="h-4 w-4" /> Rename file
               </Button>
             </div>
@@ -153,16 +153,16 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             </div>
             <Separator className="my-1 bg-zinc-100" />
             <div className="px-2 py-1.5 space-y-1">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2">
+              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
                 <Gift className="h-4 w-4" /> Win free credits
               </Button>
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2">
+              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
                 <Palette className="h-4 w-4" /> Theme Style
               </Button>
             </div>
             <Separator className="my-1 bg-zinc-100" />
             <div className="px-2 py-1.5">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2">
+              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
                 <LogOut className="h-4 w-4" /> Log out
               </Button>
             </div>

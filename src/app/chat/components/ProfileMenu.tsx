@@ -34,7 +34,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
             <div className="h-7 w-7 bg-[#f7f7f5] rounded-lg flex items-center justify-center">
               <ChevronLeft className="h-3.5 w-3.5 text-zinc-900" />
             </div>
-            <span className="text-xs font-medium text-zinc-900">Go back to dashboard</span>
+            <span className="text-xs font-medium text-zinc-900">Go back</span>
           </div>
 
           {/* Rename file (Active State) */}

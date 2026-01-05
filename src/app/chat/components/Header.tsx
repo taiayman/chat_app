@@ -45,10 +45,10 @@ export const Header: React.FC = () => {
 
           {/* Icon Buttons */}
           <div className="flex items-center gap-1.5">
-            <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50">
+            <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
               <Bell className="h-3.5 w-3.5" />
             </Button>
-            <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50">
+            <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
               <Settings className="h-3.5 w-3.5" />
             </Button>
           </div>

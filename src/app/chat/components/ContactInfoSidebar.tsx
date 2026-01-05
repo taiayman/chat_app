@@ -39,7 +39,7 @@ export const ContactInfoSidebar: React.FC<ContactInfoSidebarProps> = ({
           <h2 className="text-lg font-bold text-zinc-900">Contact Info</h2>
           <button
             onClick={() => setShowContactInfo(false)}
-            className="text-zinc-400 hover:text-zinc-600 transition-colors"
+            className="text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
@@ -61,11 +61,11 @@ export const ContactInfoSidebar: React.FC<ContactInfoSidebarProps> = ({
 
             {/* Action Buttons */}
             <div className="flex gap-3 mb-6">
-              <Button variant="outline" className="flex-1 h-9 rounded-xl border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900 gap-2">
+              <Button variant="outline" className="flex-1 h-9 rounded-xl border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900 gap-2 cursor-pointer">
                 <Phone className="h-3.5 w-3.5" />
                 <span className="text-sm">Audio</span>
               </Button>
-              <Button variant="outline" className="flex-1 h-9 rounded-xl border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900 gap-2">
+              <Button variant="outline" className="flex-1 h-9 rounded-xl border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900 gap-2 cursor-pointer">
                 <Video className="h-3.5 w-3.5" />
                 <span className="text-sm">Video</span>
               </Button>
@@ -79,7 +79,7 @@ export const ContactInfoSidebar: React.FC<ContactInfoSidebarProps> = ({
                     key={tab}
                     onClick={() => setActiveInfoTab(tab.toLowerCase())}
                     className={cn(
-                      "px-3 py-2 text-xs font-medium rounded-xl transition-all min-w-[50px]",
+                      "px-3 py-2 text-xs font-medium rounded-xl transition-all min-w-[50px] cursor-pointer",
                       activeInfoTab === tab.toLowerCase()
                         ? "bg-white text-zinc-900"
                         : "text-zinc-400 hover:text-zinc-600"
@@ -104,7 +104,7 @@ export const ContactInfoSidebar: React.FC<ContactInfoSidebarProps> = ({
                         <img
                           src={`https://picsum.photos/200/200?random=${i}`}
                           alt="Media"
-                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
                         />
                       </div>
                     ))}
@@ -121,7 +121,7 @@ export const ContactInfoSidebar: React.FC<ContactInfoSidebarProps> = ({
                         <img
                           src={`https://picsum.photos/200/200?random=${i}`}
                           alt="Media"
-                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
                         />
                       </div>
                     ))}
@@ -138,7 +138,7 @@ export const ContactInfoSidebar: React.FC<ContactInfoSidebarProps> = ({
                         <img
                           src={`https://picsum.photos/200/200?random=${i}`}
                           alt="Media"
-                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
                         />
                       </div>
                     ))}
