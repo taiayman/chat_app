@@ -108,7 +108,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
       {/* Bottom Section: Settings + Avatar */}
       <div className="flex flex-col items-center gap-3">
-        <button className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-white/50 transition-all cursor-pointer">
+        <button
+          className={cn(
+            "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
+            activeTab === "sparkles" ? "bg-white" : "hover:bg-white/50"
+          )}
+          onClick={() => setActiveTab("sparkles")}
+        >
           <Sparkles className="h-4 w-4 text-[#151515]" />
         </button>
 

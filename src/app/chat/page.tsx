@@ -30,13 +30,16 @@ export default function Chat() {
     contactId: number;
   } | null>(null);
 
+  const [filterUnread, setFilterUnread] = useState(false);
+
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const sidebarFilteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
-    contact.lastMessage.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
+    (filterUnread ? contact.unread : true) &&
+    (contact.name.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
+      contact.lastMessage.toLowerCase().includes(sidebarSearchQuery.toLowerCase()))
   );
 
   const handleContactClick = (contact: typeof initialContacts[0]) => {
@@ -99,6 +102,24 @@ export default function Chat() {
     setContextMenu(null);
   };
 
+  const handleSendMessage = (content: string) => {
+    const newMessage = {
+      id: Date.now(),
+      sender: "me",
+      content,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status: "sent"
+    };
+    setCurrentMessages([...currentMessages, newMessage]);
+
+    // Update last message in contact list
+    setContacts(contacts.map(c =>
+      c.id === selectedContact.id
+        ? { ...c, lastMessage: content, time: "Just now" }
+        : c
+    ));
+  };
+
   return (
     <div className="flex h-screen bg-[#f3f3ee] font-sans text-zinc-900 overflow-hidden relative text-sm">
       {/* 1. Left Navigation Sidebar - Full Height */}
@@ -118,7 +139,7 @@ export default function Chat() {
         />
 
         {/* Top App Bar */}
-        <Header />
+        <Header searchQuery={sidebarSearchQuery} setSearchQuery={setSidebarSearchQuery} />
 
         <div className="flex flex-1 gap-3 min-h-0">
           {/* 2. Message List Sidebar */}
@@ -139,6 +160,8 @@ export default function Chat() {
             handleArchive={handleArchive}
             unreadId={unreadId}
             handleUnread={handleUnread}
+            filterUnread={filterUnread}
+            setFilterUnread={setFilterUnread}
           />
 
           {/* 3. Main Chat Area */}
@@ -146,6 +169,7 @@ export default function Chat() {
             selectedContact={selectedContact}
             isLoading={isLoading}
             currentMessages={currentMessages}
+            onSendMessage={handleSendMessage}
           />
         </div>
 

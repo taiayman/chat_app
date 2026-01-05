@@ -9,7 +9,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  searchQuery?: string;
+  setSearchQuery?: (query: string) => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ searchQuery, setSearchQuery }) => {
   return (
     <div className="flex items-center mb-3 shrink-0">
       {/* Unified Header */}
@@ -31,6 +36,8 @@ export const Header: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Search"
+                  value={searchQuery || ""}
+                  onChange={(e) => setSearchQuery?.(e.target.value)}
                   className="flex-1 bg-transparent border-none outline-none text-sm text-zinc-800 placeholder:text-[#94A3B8]"
                 />
               </div>

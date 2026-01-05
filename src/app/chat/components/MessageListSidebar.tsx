@@ -42,6 +42,8 @@ interface MessageListSidebarProps {
   handleArchive: (id: number) => void;
   unreadId: number | null;
   handleUnread: (id: number) => void;
+  filterUnread: boolean;
+  setFilterUnread: (filter: boolean) => void;
 }
 
 export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
@@ -61,9 +63,11 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
   handleArchive,
   unreadId,
   handleUnread,
+  filterUnread,
+  setFilterUnread,
 }) => {
   return (
-    <div className="w-[360px] bg-white rounded-2xl flex flex-col overflow-hidden">
+    <div className="w-[320px] bg-white rounded-2xl flex flex-col overflow-hidden">
       <div className="p-4 pb-2">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-bold text-zinc-800">All Message</h1>
@@ -146,26 +150,29 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
               onChange={(e) => setSidebarSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg border-2 border-[#F2F2F0] bg-white text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 cursor-pointer">
+          <Button
+            variant="outline"
+            size="icon"
+            className={cn(
+              "h-9 w-9 rounded-lg border-2 border-[#F2F2F0] bg-white text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 cursor-pointer",
+              filterUnread && "bg-zinc-100 border-[#00A389] text-[#00A389]"
+            )}
+            onClick={() => setFilterUnread(!filterUnread)}
+          >
             <Filter className="h-3.5 w-3.5" />
           </Button>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 pl-2 pr-3">
+      <ScrollArea className="flex-1 px-3">
         <div className="flex flex-col gap-0.5 pb-3">
           {sidebarFilteredContacts.map((contact) => (
             <div
               key={contact.id}
-              className="relative overflow-hidden rounded-xl"
+              className="relative rounded-xl w-[98%] mx-auto"
             >
               {/* Unread Button Background (Left) */}
-              <div
-                className={cn(
-                  "absolute top-0 left-0 bottom-0 w-[64px] flex items-center justify-center z-0 transition-opacity duration-200",
-                  unreadId === contact.id ? "opacity-100" : "opacity-0"
-                )}
-              >
+              <div className="absolute top-0 left-0 bottom-0 w-[64px] flex items-center justify-center z-0">
                 <button
                   className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
                   onClick={(e) => {
@@ -178,14 +185,29 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                 </button>
               </div>
 
+              {/* Archive Button Background */}
+              <div className="absolute top-0 right-0 bottom-0 w-[64px] flex items-center justify-center z-0">
+                <button
+                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleArchive(contact.id);
+                  }}
+                >
+                  <Archive className="h-4 w-4 text-white" />
+                  <span className="text-[9px] font-medium text-white">Archive</span>
+                </button>
+              </div>
+
               <div
                 onClick={() => handleContactClick(contact)}
                 onContextMenu={(e) => handleContextMenu(e, contact.id)}
                 className={cn(
-                  "group flex items-center gap-2.5 p-2.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10",
+                  "group flex items-center gap-2.5 py-2.5 px-1.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10 bg-white",
                   selectedContact.id === contact.id ? "bg-[#f3f3ee]" : "hover:bg-[#f3f3ee]",
-                  archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "w-[92%] mx-auto",
-                  unreadId === contact.id ? "translate-x-[68px] w-[calc(100%-68px)] bg-[#f3f3ee]" : "translate-x-0"
+                  archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "",
+                  unreadId === contact.id ? "w-[calc(100%-68px)] ml-auto bg-[#f3f3ee]" : "",
+                  archiveId !== contact.id && unreadId !== contact.id && "w-full"
                 )}
               >
                 <div className="relative shrink-0">
@@ -206,41 +228,23 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                       {contact.time}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <p className={cn("text-xs truncate pr-2", contact.unread ? "text-zinc-900 font-medium" : "text-zinc-500")}>
+                  <div className="flex items-center justify-between min-w-0">
+                    <p className={cn("text-xs truncate pr-2 flex-1 w-0", contact.unread ? "text-zinc-900 font-medium" : "text-zinc-500")}>
                       {contact.lastMessage}
                     </p>
                     {contact.unread ? (
-                      <div className="h-4 min-w-4 px-1 rounded-full bg-[#1E9A80] flex items-center justify-center">
+                      <div className="h-4 min-w-4 px-1 rounded-full bg-[#1E9A80] flex items-center justify-center shrink-0">
                         <span className="text-[9px] font-bold text-white">1</span>
                       </div>
                     ) : contact.status === "read" ? (
-                      <CheckCheck className="h-3 w-3 text-zinc-400" />
+                      <CheckCheck className="h-3 w-3 text-zinc-400 shrink-0" />
                     ) : contact.status === "delivered" ? (
-                      <CheckCheck className="h-3 w-3 text-zinc-300" />
+                      <CheckCheck className="h-3 w-3 text-zinc-300 shrink-0" />
                     ) : null}
                   </div>
                 </div>
               </div>
 
-              {/* Archive Button Background */}
-              <div
-                className={cn(
-                  "absolute top-0 right-0 bottom-0 w-[64px] flex items-center justify-center z-0 transition-opacity duration-200",
-                  archiveId === contact.id ? "opacity-100" : "opacity-0"
-                )}
-              >
-                <button
-                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleArchive(contact.id);
-                  }}
-                >
-                  <Archive className="h-4 w-4 text-white" />
-                  <span className="text-[9px] font-medium text-white">Archive</span>
-                </button>
-              </div>
             </div>
           ))}
         </div>
