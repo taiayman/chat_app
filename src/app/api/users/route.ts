@@ -11,9 +11,11 @@ export async function GET() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
+        const currentUserId = session.user.id
+
         const users = await prisma.user.findMany({
             where: {
-                id: { not: session.user.id }
+                id: { not: currentUserId }
             },
             select: {
                 id: true,
@@ -34,8 +36,8 @@ export async function GET() {
                 const lastMessage = await prisma.message.findFirst({
                     where: {
                         OR: [
-                            { senderId: session.user.id, receiverId: user.id },
-                            { senderId: user.id, receiverId: session.user.id }
+                            { senderId: currentUserId, receiverId: user.id },
+                            { senderId: user.id, receiverId: currentUserId }
                         ]
                     },
                     orderBy: { createdAt: 'desc' },
@@ -51,7 +53,7 @@ export async function GET() {
                 const unreadCount = await prisma.message.count({
                     where: {
                         senderId: user.id,
-                        receiverId: session.user.id,
+                        receiverId: currentUserId,
                         isRead: false
                     }
                 })
@@ -78,3 +80,4 @@ export async function GET() {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     }
 }
+
