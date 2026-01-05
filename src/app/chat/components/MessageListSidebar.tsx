@@ -15,13 +15,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface Contact {
-  id: number;
+  id: number | string;
   name: string;
   avatar: string;
   lastMessage: string;
   time: string;
   unread: boolean;
-  online: boolean;
+  online?: boolean;
+  isOnline?: boolean;
   status: string;
 }
 
@@ -33,18 +34,38 @@ interface MessageListSidebarProps {
   setSearchQuery: (query: string) => void;
   sidebarSearchQuery: string;
   setSidebarSearchQuery: (query: string) => void;
-  selectedContact: Contact;
+  selectedContact: Contact | null;
   handleContactClick: (contact: Contact) => void;
   showNewMessageModal: boolean;
   setShowNewMessageModal: (show: boolean) => void;
-  handleContextMenu: (e: React.MouseEvent, contactId: number) => void;
-  archiveId: number | null;
-  handleArchive: (id: number) => void;
-  unreadId: number | null;
-  handleUnread: (id: number) => void;
+  handleContextMenu: (e: React.MouseEvent, contactId: number | string) => void;
+  archiveId: number | string | null;
+  handleArchive: (id: number | string) => void;
+  unreadId: number | string | null;
+  handleUnread: (id: number | string) => void;
   filterUnread: boolean;
   setFilterUnread: (filter: boolean) => void;
+  isLoading?: boolean;
 }
+
+// Shimmer component
+const ShimmerBlock = ({ className }: { className?: string }) => (
+  <div className={cn("relative overflow-hidden bg-zinc-100", className)}>
+    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+  </div>
+);
+
+// Contact card shimmer
+const ContactShimmer = () => (
+  <div className="flex items-center gap-3 p-3 rounded-xl">
+    <ShimmerBlock className="h-11 w-11 rounded-full shrink-0" />
+    <div className="flex-1 space-y-2">
+      <ShimmerBlock className="h-3.5 w-24 rounded" />
+      <ShimmerBlock className="h-3 w-36 rounded" />
+    </div>
+    <ShimmerBlock className="h-3 w-10 rounded" />
+  </div>
+);
 
 export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
   contacts,
@@ -65,6 +86,7 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
   handleUnread,
   filterUnread,
   setFilterUnread,
+  isLoading = false,
 }) => {
   return (
     <div className="w-[320px] bg-white rounded-2xl flex flex-col overflow-hidden">
@@ -166,87 +188,102 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
 
       <ScrollArea className="flex-1 px-3">
         <div className="flex flex-col gap-0.5 pb-3">
-          {sidebarFilteredContacts.map((contact) => (
-            <div
-              key={contact.id}
-              className="relative rounded-xl w-[98%] mx-auto"
-            >
-              {/* Unread Button Background (Left) */}
-              <div className="absolute top-0 left-0 bottom-0 w-[64px] flex items-center justify-center z-0">
-                <button
-                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleUnread(contact.id);
-                  }}
-                >
-                  <MessageCircle className="h-4 w-4 text-white" />
-                  <span className="text-[9px] font-medium text-white">Unread</span>
-                </button>
-              </div>
-
-              {/* Archive Button Background */}
-              <div className="absolute top-0 right-0 bottom-0 w-[64px] flex items-center justify-center z-0">
-                <button
-                  className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleArchive(contact.id);
-                  }}
-                >
-                  <Archive className="h-4 w-4 text-white" />
-                  <span className="text-[9px] font-medium text-white">Archive</span>
-                </button>
-              </div>
-
-              <div
-                onClick={() => handleContactClick(contact)}
-                onContextMenu={(e) => handleContextMenu(e, contact.id)}
-                className={cn(
-                  "group flex items-center gap-2.5 py-2.5 px-1.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10 bg-white",
-                  selectedContact.id === contact.id ? "bg-[#f3f3ee]" : "hover:bg-[#f3f3ee]",
-                  archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "",
-                  unreadId === contact.id ? "w-[calc(100%-68px)] ml-auto bg-[#f3f3ee]" : "",
-                  archiveId !== contact.id && unreadId !== contact.id && "w-full"
-                )}
-              >
-                <div className="relative shrink-0">
-                  <Avatar className="h-10 w-10 border border-zinc-100">
-                    <AvatarImage src={contact.avatar} />
-                    <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  {contact.online && (
-                    <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-white rounded-full"></span>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className={cn("text-sm", contact.unread ? "font-bold text-zinc-900" : "font-semibold text-zinc-900")}>
-                      {contact.name}
-                    </span>
-                    <span className={cn("text-[10px]", contact.unread ? "text-[#1E9A80] font-medium" : "text-zinc-400")}>
-                      {contact.time}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between min-w-0">
-                    <p className={cn("text-xs truncate pr-2 flex-1 w-0", contact.unread ? "text-zinc-900 font-medium" : "text-zinc-500")}>
-                      {contact.lastMessage}
-                    </p>
-                    {contact.unread ? (
-                      <div className="h-4 min-w-4 px-1 rounded-full bg-[#1E9A80] flex items-center justify-center shrink-0">
-                        <span className="text-[9px] font-bold text-white">1</span>
-                      </div>
-                    ) : contact.status === "read" ? (
-                      <CheckCheck className="h-3 w-3 text-zinc-400 shrink-0" />
-                    ) : contact.status === "delivered" ? (
-                      <CheckCheck className="h-3 w-3 text-zinc-300 shrink-0" />
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-
+          {isLoading ? (
+            // Shimmer loading state
+            <>
+              <ContactShimmer />
+              <ContactShimmer />
+              <ContactShimmer />
+              <ContactShimmer />
+              <ContactShimmer />
+            </>
+          ) : sidebarFilteredContacts.length === 0 ? (
+            <div className="text-center py-8 text-sm text-zinc-400">
+              No conversations yet
             </div>
-          ))}
+          ) : (
+            sidebarFilteredContacts.map((contact) => (
+              <div
+                key={contact.id}
+                className="relative rounded-xl w-[98%] mx-auto"
+              >
+                {/* Unread Button Background (Left) */}
+                <div className="absolute top-0 left-0 bottom-0 w-[64px] flex items-center justify-center z-0">
+                  <button
+                    className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUnread(contact.id);
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4 text-white" />
+                    <span className="text-[9px] font-medium text-white">Unread</span>
+                  </button>
+                </div>
+
+                {/* Archive Button Background */}
+                <div className="absolute top-0 right-0 bottom-0 w-[64px] flex items-center justify-center z-0">
+                  <button
+                    className="h-full w-[60px] bg-[#1E9A80] rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-[#188f75] transition-colors cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleArchive(contact.id);
+                    }}
+                  >
+                    <Archive className="h-4 w-4 text-white" />
+                    <span className="text-[9px] font-medium text-white">Archive</span>
+                  </button>
+                </div>
+
+                <div
+                  onClick={() => handleContactClick(contact)}
+                  onContextMenu={(e) => handleContextMenu(e, contact.id)}
+                  className={cn(
+                    "group flex items-center gap-2.5 py-2.5 px-1.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10 bg-white",
+                    selectedContact?.id === contact.id ? "bg-[#f3f3ee]" : "hover:bg-[#f3f3ee]",
+                    archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "",
+                    unreadId === contact.id ? "w-[calc(100%-68px)] ml-auto bg-[#f3f3ee]" : "",
+                    archiveId !== contact.id && unreadId !== contact.id && "w-full"
+                  )}
+                >
+                  <div className="relative shrink-0">
+                    <Avatar className="h-10 w-10 border border-zinc-100">
+                      <AvatarImage src={contact.avatar} />
+                      <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    {contact.online && (
+                      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className={cn("text-sm", contact.unread ? "font-bold text-zinc-900" : "font-semibold text-zinc-900")}>
+                        {contact.name}
+                      </span>
+                      <span className={cn("text-[10px]", contact.unread ? "text-[#1E9A80] font-medium" : "text-zinc-400")}>
+                        {contact.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between min-w-0">
+                      <p className={cn("text-xs truncate pr-2 flex-1 w-0", contact.unread ? "text-zinc-900 font-medium" : "text-zinc-500")}>
+                        {contact.lastMessage}
+                      </p>
+                      {contact.unread ? (
+                        <div className="h-4 min-w-4 px-1 rounded-full bg-[#1E9A80] flex items-center justify-center shrink-0">
+                          <span className="text-[9px] font-bold text-white">1</span>
+                        </div>
+                      ) : contact.status === "read" ? (
+                        <CheckCheck className="h-3 w-3 text-zinc-400 shrink-0" />
+                      ) : contact.status === "delivered" ? (
+                        <CheckCheck className="h-3 w-3 text-zinc-300 shrink-0" />
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            ))
+          )}
         </div>
       </ScrollArea>
     </div>
