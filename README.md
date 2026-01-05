@@ -153,5 +153,3 @@ src/
 - Tried to match Figma design as close as possible
 
 ---
-
-Built by Ayman 🚀
