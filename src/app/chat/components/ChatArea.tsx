@@ -150,12 +150,13 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
   };
 
   React.useEffect(() => {
-    scrollToBottom();
+    // Scroll instantly (auto) if it's a bulk load (e.g. initial open), smooth for single new messages
+    scrollToBottom(currentMessages.length > 1 ? "auto" : "smooth");
   }, [currentMessages]);
 
   // Cleanup recording interval on unmount
@@ -386,6 +387,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
                             src={imageUrl}
                             alt="Sent image"
                             className="max-w-[250px] max-h-[300px] object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                            onLoad={() => scrollToBottom("smooth")}
                           />
                           {caption && (
                             <div className={cn(

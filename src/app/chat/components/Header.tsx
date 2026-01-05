@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 interface HeaderProps {
   searchQuery?: string;
   setSearchQuery?: (query: string) => void;
+  userImage?: string | null;
 }
 
-export const Header: React.FC<HeaderProps> = ({ searchQuery, setSearchQuery }) => {
+export const Header: React.FC<HeaderProps> = ({ searchQuery, setSearchQuery, userImage }) => {
   return (
     <div className="flex items-center mb-3 shrink-0">
       {/* Unified Header */}
@@ -65,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, setSearchQuery }) =
           {/* User Profile */}
           <div className="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-lg cursor-pointer hover:bg-zinc-50 transition-colors group">
             <Avatar className="h-8 w-8 border-2 border-white">
-              <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" />
+              <AvatarImage src={userImage || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"} />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
             <ChevronDown className="h-4 w-4 text-zinc-400 group-hover:text-zinc-600 transition-colors" />

@@ -30,6 +30,7 @@ interface SidebarNavProps {
   setActiveTab: (tab: string) => void;
   showProfileMenu: boolean;
   setShowProfileMenu: (show: boolean) => void;
+  userImage?: string | null;
 }
 
 export const SidebarNav: React.FC<SidebarNavProps> = ({
@@ -37,6 +38,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   setActiveTab,
   showProfileMenu,
   setShowProfileMenu,
+  userImage,
 }) => {
   return (
     <div className="flex flex-col items-center justify-between pt-5 pb-6 w-[76px] shrink-0">
@@ -122,7 +124,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           <DropdownMenuTrigger asChild>
             <button className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" />
+                <AvatarImage src={userImage || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"} />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
             </button>

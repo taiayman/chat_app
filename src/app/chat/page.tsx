@@ -319,6 +319,7 @@ export default function Chat() {
         setActiveTab={setActiveTab}
         showProfileMenu={showProfileMenu}
         setShowProfileMenu={setShowProfileMenu}
+        userImage={session?.user?.image}
       />
 
       {/* Main Content Area */}
@@ -330,7 +331,11 @@ export default function Chat() {
         />
 
         {/* Top App Bar */}
-        <Header searchQuery={sidebarSearchQuery} setSearchQuery={setSidebarSearchQuery} />
+        <Header
+          searchQuery={sidebarSearchQuery}
+          setSearchQuery={setSidebarSearchQuery}
+          userImage={session?.user?.image}
+        />
 
         <div className="flex flex-1 gap-3 min-h-0">
           {/* 2. Message List Sidebar */}
