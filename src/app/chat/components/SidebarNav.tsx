@@ -1,5 +1,6 @@
 import { signOut } from "next-auth/react";
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
   Home,
   MessageCircle,
@@ -41,6 +42,17 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   setShowProfileMenu,
   userImage,
 }) => {
+  const router = useRouter();
+
+  const handleNavigation = (tab: string) => {
+    setActiveTab(tab);
+    if (tab === "sparkles") {
+      router.push("/ai");
+    } else if (tab === "chat") {
+      router.push("/chat");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-between pt-5 pb-6 w-[76px] shrink-0">
       {/* Top Section: Logo + Nav */}
@@ -72,7 +84,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               "h-10 w-10 rounded-xl flex items-center justify-center transition-all relative cursor-pointer",
               activeTab === "chat" ? "bg-white" : "hover:bg-white/50"
             )}
-            onClick={() => setActiveTab("chat")}
+            onClick={() => handleNavigation("chat")}
           >
             <MessageCircle className="h-4 w-4 text-[#151515]" />
           </button>
@@ -116,7 +128,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
             activeTab === "sparkles" ? "bg-white" : "hover:bg-white/50"
           )}
-          onClick={() => setActiveTab("sparkles")}
+          onClick={() => handleNavigation("sparkles")}
         >
           <Sparkles className="h-4 w-4 text-[#151515]" />
         </button>
