@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Inter, Newsreader } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,24 +46,22 @@ export default function LoginPage() {
     }, []);
 
     return (
-        <div className={`min-h-screen bg-[#f3f3ee] text-zinc-900 selection:bg-[#1E9A80] selection:text-white ${inter.variable} ${serifFont.variable} font-sans overflow-hidden flex flex-col`}>
+        <div className={`min-h-screen min-h-[100dvh] bg-[#f3f3ee] text-zinc-900 selection:bg-[#1E9A80] selection:text-white ${inter.variable} ${serifFont.variable} font-sans overflow-hidden flex flex-col`}>
 
             {/* --- Navbar --- */}
-            <nav className="flex items-center justify-between px-6 py-2 md:px-12 z-20">
+            <nav className="flex items-center justify-between px-4 md:px-6 lg:px-12 py-3 md:py-2 z-20 shrink-0">
                 {/* Logo */}
-                <div className="flex items-center gap-3 cursor-pointer group">
-                    <div className="h-10 w-10 bg-[#1E9A80] rounded-full flex items-center justify-center transition-transform group-hover:scale-105">
-                        <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div className="flex items-center gap-2 md:gap-3 cursor-pointer group">
+                    <div className="h-9 w-9 md:h-10 md:w-10 bg-[#1E9A80] rounded-full flex items-center justify-center transition-transform group-hover:scale-105">
+                        <svg width="18" height="20" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-5 md:h-[22px]">
                             <path fillRule="evenodd" clipRule="evenodd" d="M0 8.25V17.05H2.75C3.039 17.05 3.325 17.107 3.592 17.218C3.859 17.328 4.102 17.49 4.306 17.694C4.51 17.899 4.672 18.141 4.783 18.408C4.893 18.675 4.95 18.961 4.95 19.25V22H11.55L19.8 13.75V4.95H17.05C16.761 4.95 16.475 4.893 16.208 4.783C15.941 4.672 15.699 4.51 15.495 4.306C15.29 4.101 15.128 3.859 15.018 3.592C14.907 3.325 14.85 3.039 14.85 2.75V0H8.25L0 8.25ZM9.35 16.5H5.5V10.45L10.45 5.5H14.3V11.55L9.35 16.5Z" fill="white" />
                         </svg>
                     </div>
-                    <span className={`text-2xl font-serif tracking-tight font-medium translate-y-[3px] ${serifFont.className}`}>Chat App</span>
+                    <span className={`text-xl md:text-2xl font-serif tracking-tight font-medium translate-y-[2px] md:translate-y-[3px] ${serifFont.className}`}>Chat App</span>
                 </div>
 
-
-
                 {/* Action Buttons */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                     <Link href="/chat">
                         <Button
                             variant="ghost"
@@ -75,7 +72,7 @@ export default function LoginPage() {
                     </Link>
                     <Link href="/chat">
                         <Button
-                            className="bg-[#111625] text-white hover:bg-zinc-800 rounded-xl px-6 font-medium transition-all shadow-lg shadow-zinc-200"
+                            className="bg-[#111625] text-white hover:bg-zinc-800 rounded-xl px-4 md:px-6 text-sm font-medium transition-all shadow-lg shadow-zinc-200"
                         >
                             Get Started
                         </Button>
@@ -84,19 +81,19 @@ export default function LoginPage() {
             </nav>
 
             {/* --- Main Content --- */}
-            <main className="flex-1 w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:px-10 lg:pb-6 lg:pt-2 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-20 items-stretch relative z-10 h-full">
+            <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-6 md:p-6 lg:px-10 lg:pb-6 lg:pt-2 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-20 items-center lg:items-stretch relative z-10">
 
                 {/* Left Column: Form & Text */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="flex flex-col justify-center w-full max-w-xl mx-auto space-y-8 lg:pl-24"
+                    className="flex flex-col justify-center w-full max-w-xl mx-auto space-y-6 md:space-y-8 lg:pl-24"
                 >
 
                     {/* Headings */}
-                    <div className="space-y-4">
-                        <h1 className={`text-5xl md:text-7xl leading-[1.1] text-[#111625] ${serifFont.className} flex flex-nowrap items-center gap-x-3 whitespace-nowrap`}>
+                    <div className="space-y-3 md:space-y-4 text-center lg:text-left">
+                        <h1 className={`text-4xl md:text-5xl lg:text-7xl leading-[1.1] text-[#111625] ${serifFont.className} flex flex-wrap lg:flex-nowrap items-center justify-center lg:justify-start gap-x-2 md:gap-x-3`}>
                             Hello
                             <div className="relative inline-block">
                                 <AnimatePresence mode="wait">
@@ -114,19 +111,19 @@ export default function LoginPage() {
                                 <span className="invisible">{titles[index]}.</span>
                             </div>
                         </h1>
-                        <p className="text-lg text-zinc-500 font-normal max-w-sm">
+                        <p className="text-base md:text-lg text-zinc-500 font-normal max-w-sm mx-auto lg:mx-0">
                             Enter your details to access your workspace and continue where you left off.
                         </p>
                     </div>
 
                     {/* Auth Card */}
-                    <div className="w-full max-w-[380px] bg-transparent border-2 border-zinc-200 rounded-[28px] px-5 py-7">
+                    <div className="w-full max-w-[380px] mx-auto lg:mx-0 bg-transparent border-2 border-zinc-200 rounded-[24px] md:rounded-[28px] px-4 md:px-5 py-6 md:py-7">
                         <div className="space-y-4">
                             {/* Google Button */}
                             <Button
                                 onClick={() => signIn('google', { callbackUrl: '/chat' })}
                                 variant="outline"
-                                className="w-full h-10 bg-white border-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 justify-center gap-3 rounded-xl text-sm font-medium shadow-none cursor-pointer"
+                                className="w-full h-11 md:h-10 bg-white border-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 justify-center gap-3 rounded-xl text-sm font-medium shadow-none cursor-pointer active:scale-[0.98] transition-transform"
                             >
                                 <svg viewBox="0 0 24 24" className="w-5 h-5">
                                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -152,12 +149,12 @@ export default function LoginPage() {
                                         type="email"
                                         placeholder="name@work-email.com"
                                         disabled
-                                        className="h-10 bg-white border-2 border-zinc-200 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-[#1E9A80] focus-visible:border-[#1E9A80] rounded-xl text-sm shadow-none transition-all cursor-not-allowed"
+                                        className="h-11 md:h-10 bg-white border-2 border-zinc-200 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-[#1E9A80] focus-visible:border-[#1E9A80] rounded-xl text-sm shadow-none transition-all cursor-not-allowed"
                                     />
                                 </div>
                                 <Button
                                     disabled
-                                    className="w-full h-10 bg-[#1E9A80] text-white rounded-xl text-sm font-medium tracking-wide shadow-none cursor-not-allowed"
+                                    className="w-full h-11 md:h-10 bg-[#1E9A80] text-white rounded-xl text-sm font-medium tracking-wide shadow-none cursor-not-allowed"
                                 >
                                     Continue with Email
                                 </Button>
@@ -171,12 +168,12 @@ export default function LoginPage() {
                     </div>
                 </motion.div>
 
-                {/* Right Column: Visual/Image */}
+                {/* Right Column: Visual/Image - Hidden on mobile */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="relative w-full h-full rounded-[48px] overflow-hidden hidden lg:block bg-[#111625]"
+                    className="relative w-full h-full min-h-[300px] rounded-[32px] md:rounded-[48px] overflow-hidden hidden lg:block bg-[#111625]"
                 >
                     <Image
                         src="/images/auth_image.jpeg?v=1"
@@ -191,6 +188,3 @@ export default function LoginPage() {
         </div>
     );
 }
-
-// --- Icons Components ---
-// GoogleIcon component is no longer needed as the SVG is inlined.
