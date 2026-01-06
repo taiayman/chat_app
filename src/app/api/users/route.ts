@@ -30,6 +30,12 @@ export async function GET() {
             }
         })
 
+        // Debug log to check user images
+        console.log('Fetched users with images:', users.map(u => ({
+            email: u.email,
+            image: u.image
+        })))
+
         // Get last message for each user
         const usersWithLastMessage = await Promise.all(
             users.map(async (user) => {

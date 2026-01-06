@@ -101,8 +101,8 @@ export default function AIChat() {
         return (
             <div className="flex h-screen items-center justify-center bg-[#f3f3ee]">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="h-16 w-16 bg-[#1E9A80] rounded-[20px] flex items-center justify-center animate-bounce shadow-xl">
-                        <svg width="32" height="34" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div className="h-24 w-24 bg-[#1E9A80] rounded-[28px] flex items-center justify-center animate-bounce">
+                        <svg width="40" height="44" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" clipRule="evenodd" d="M0 8.25V17.05H2.75C3.039 17.05 3.325 17.107 3.592 17.218C3.859 17.328 4.102 17.49 4.306 17.694C4.51 17.899 4.672 18.141 4.783 18.408C4.893 18.675 4.95 18.961 4.95 19.25V22H11.55L19.8 13.75V4.95H17.05C16.761 4.95 16.475 4.893 16.208 4.783C15.941 4.672 15.699 4.51 15.495 4.306C15.29 4.101 15.128 3.859 15.018 3.592C14.907 3.325 14.85 3.039 14.85 2.75V0H8.25L0 8.25ZM9.35 16.5H5.5V10.45L10.45 5.5H14.3V11.55L9.35 16.5Z" fill="white" />
                         </svg>
                     </div>
