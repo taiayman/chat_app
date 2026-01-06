@@ -65,6 +65,9 @@ export default function Chat() {
   const [filterUnread, setFilterUnread] = useState(false);
   const isSendingRef = useRef(false);
 
+  // Mobile state - track if we're showing chat on mobile
+  const [mobileShowChat, setMobileShowChat] = useState(false);
+
   // Fetch contacts on mount
   useEffect(() => {
     async function fetchContacts() {
@@ -92,7 +95,8 @@ export default function Chat() {
             avatar: user.image || '/default-avatar.png'
           }));
           setContacts(transformedContacts);
-          if (transformedContacts.length > 0 && !selectedContact) {
+          // Don't auto-select on mobile
+          if (transformedContacts.length > 0 && !selectedContact && window.innerWidth >= 768) {
             setSelectedContact(transformedContacts[0]);
           }
         }
@@ -202,6 +206,8 @@ export default function Chat() {
     setContextMenu(null);
     setArchiveId(null);
     setUnreadId(null);
+    // On mobile, show the chat view
+    setMobileShowChat(true);
 
     // Mark messages as read on contact click
     setContacts(prev => prev.map(c =>
@@ -209,6 +215,11 @@ export default function Chat() {
         ? { ...c, unread: false, unreadCount: 0 }
         : c
     ));
+  };
+
+  // Handle back button on mobile
+  const handleMobileBack = () => {
+    setMobileShowChat(false);
   };
 
   const handleContextMenu = (e: React.MouseEvent, contactId: string) => {
@@ -318,64 +329,84 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex h-screen bg-[#f3f3ee] font-sans text-zinc-900 overflow-hidden relative text-sm">
-      {/* 1. Left Navigation Sidebar - Full Height */}
-      <SidebarNav
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        showProfileMenu={showProfileMenu}
-        setShowProfileMenu={setShowProfileMenu}
-        userImage={session?.user?.image}
-      />
+    <div className="flex h-screen h-[100dvh] bg-[#f3f3ee] font-sans text-zinc-900 overflow-hidden relative text-sm">
+      {/* 1. Left Navigation Sidebar - Hidden on mobile, shown on md+ */}
+      <div className="hidden md:block">
+        <SidebarNav
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          showProfileMenu={showProfileMenu}
+          setShowProfileMenu={setShowProfileMenu}
+          userImage={session?.user?.image}
+        />
+      </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col p-3 pb-4 pl-0 min-h-0">
+      <div className="flex-1 flex flex-col md:p-3 md:pb-4 md:pl-0 min-h-0">
         {/* Profile Menu Modal */}
         <ProfileMenu
           showProfileMenu={showProfileMenu}
           setShowProfileMenu={setShowProfileMenu}
         />
 
-        {/* Top App Bar */}
-        <Header
-          searchQuery={sidebarSearchQuery}
-          setSearchQuery={setSidebarSearchQuery}
-          userImage={session?.user?.image}
-        />
-
-        <div className="flex flex-1 gap-3 min-h-0">
-          {/* 2. Message List Sidebar */}
-          <MessageListSidebar
-            contacts={contacts as any}
-            filteredContacts={filteredContacts as any}
-            sidebarFilteredContacts={sidebarFilteredContacts as any}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            sidebarSearchQuery={sidebarSearchQuery}
-            setSidebarSearchQuery={setSidebarSearchQuery}
-            selectedContact={selectedContact as any}
-            handleContactClick={handleContactClick as any}
-            showNewMessageModal={showNewMessageModal}
-            setShowNewMessageModal={setShowNewMessageModal}
-            handleContextMenu={handleContextMenu as any}
-            archiveId={archiveId as any}
-            handleArchive={handleArchive as any}
-            unreadId={unreadId as any}
-            handleUnread={handleUnread as any}
-            filterUnread={filterUnread}
-            setFilterUnread={setFilterUnread}
-            isLoading={isLoading && contacts.length === 0}
+        {/* Top App Bar - Hidden on mobile */}
+        <div className="hidden md:block">
+          <Header
+            searchQuery={sidebarSearchQuery}
+            setSearchQuery={setSidebarSearchQuery}
+            userImage={session?.user?.image}
           />
+        </div>
 
-          {/* 3. Main Chat Area */}
-          {selectedContact && (
-            <ChatArea
+        <div className="flex flex-1 md:gap-3 min-h-0">
+          {/* 2. Message List Sidebar - Full width on mobile when chat not shown */}
+          <div className={`
+            ${mobileShowChat ? 'hidden' : 'flex'} 
+            md:flex 
+            w-full md:w-auto
+            flex-col
+          `}>
+            <MessageListSidebar
+              contacts={contacts as any}
+              filteredContacts={filteredContacts as any}
+              sidebarFilteredContacts={sidebarFilteredContacts as any}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              sidebarSearchQuery={sidebarSearchQuery}
+              setSidebarSearchQuery={setSidebarSearchQuery}
               selectedContact={selectedContact as any}
-              isLoading={isLoading}
-              currentMessages={currentMessages}
-              onSendMessage={handleSendMessage}
+              handleContactClick={handleContactClick as any}
+              showNewMessageModal={showNewMessageModal}
+              setShowNewMessageModal={setShowNewMessageModal}
+              handleContextMenu={handleContextMenu as any}
+              archiveId={archiveId as any}
+              handleArchive={handleArchive as any}
+              unreadId={unreadId as any}
+              handleUnread={handleUnread as any}
+              filterUnread={filterUnread}
+              setFilterUnread={setFilterUnread}
+              isLoading={isLoading && contacts.length === 0}
+              userImage={session?.user?.image}
             />
-          )}
+          </div>
+
+          {/* 3. Main Chat Area - Full width on mobile when shown */}
+          <div className={`
+            ${mobileShowChat ? 'flex' : 'hidden'} 
+            md:flex 
+            flex-1 
+            min-w-0
+          `}>
+            {selectedContact && (
+              <ChatArea
+                selectedContact={selectedContact as any}
+                isLoading={isLoading}
+                currentMessages={currentMessages}
+                onSendMessage={handleSendMessage}
+                onMobileBack={handleMobileBack}
+              />
+            )}
+          </div>
         </div>
 
         {/* 4. Contact Info Sidebar (Overlay) */}
@@ -385,6 +416,18 @@ export default function Chat() {
           selectedContact={selectedContact as any}
           activeInfoTab={activeInfoTab}
           setActiveInfoTab={setActiveInfoTab}
+        />
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+        <SidebarNav
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          showProfileMenu={showProfileMenu}
+          setShowProfileMenu={setShowProfileMenu}
+          userImage={session?.user?.image}
+          isMobile={true}
         />
       </div>
 

@@ -6,7 +6,8 @@ import {
   CheckCheck,
   Archive,
   MessageCircle,
-  X
+  Settings,
+  Bell
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ interface MessageListSidebarProps {
   filterUnread: boolean;
   setFilterUnread: (filter: boolean) => void;
   isLoading?: boolean;
+  userImage?: string | null;
 }
 
 // Shimmer component
@@ -87,10 +89,41 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
   filterUnread,
   setFilterUnread,
   isLoading = false,
+  userImage,
 }) => {
   return (
-    <div className="w-[320px] bg-white rounded-2xl flex flex-col overflow-hidden">
-      <div className="p-4 pb-2">
+    <div className="w-full md:w-[320px] bg-white md:rounded-2xl flex flex-col overflow-hidden h-full">
+      {/* Mobile Header */}
+      <div className="md:hidden px-4 pt-4 pb-2 bg-white">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 border border-zinc-100">
+              <AvatarImage src={userImage || undefined} />
+              <AvatarFallback>Me</AvatarFallback>
+            </Avatar>
+            <h1 className="text-xl font-bold text-zinc-900">Chats</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full text-zinc-600"
+            >
+              <Bell className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full text-zinc-600"
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden md:block p-4 pb-2">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-bold text-zinc-800">All Message</h1>
           <div className="relative">
@@ -161,13 +194,16 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
             )}
           </div>
         </div>
+      </div>
 
-        <div className="flex gap-2 mb-3">
+      {/* Search Bar - Both mobile and desktop */}
+      <div className="px-4 md:px-4 pb-2 md:pb-2">
+        <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
             <Input
-              placeholder="Search in message"
-              className="pl-8 bg-white border-2 border-[#F2F2F0] rounded-lg h-9 text-xs focus-visible:ring-0 focus-visible:border-[#00A389] transition-colors"
+              placeholder="Search conversations..."
+              className="pl-10 bg-[#f3f3ee] md:bg-white border-0 md:border-2 md:border-[#F2F2F0] rounded-xl md:rounded-lg h-10 md:h-9 text-sm md:text-xs focus-visible:ring-0 focus-visible:border-[#00A389] transition-colors"
               value={sidebarSearchQuery}
               onChange={(e) => setSidebarSearchQuery(e.target.value)}
             />
@@ -176,18 +212,85 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
             variant="outline"
             size="icon"
             className={cn(
-              "h-9 w-9 rounded-lg border-2 border-[#F2F2F0] bg-white text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 cursor-pointer",
-              filterUnread && "bg-zinc-100 border-[#00A389] text-[#00A389]"
+              "h-10 w-10 md:h-9 md:w-9 rounded-xl md:rounded-lg border-0 md:border-2 md:border-[#F2F2F0] bg-[#f3f3ee] md:bg-white text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 md:hover:bg-zinc-50 cursor-pointer",
+              filterUnread && "bg-[#E8F5F3] md:bg-zinc-100 border-[#00A389] text-[#00A389]"
             )}
             onClick={() => setFilterUnread(!filterUnread)}
           >
-            <Filter className="h-3.5 w-3.5" />
+            <Filter className="h-4 w-4 md:h-3.5 md:w-3.5" />
+          </Button>
+
+          {/* Mobile New Message Button */}
+          <Button
+            className="md:hidden h-10 w-10 rounded-xl bg-[#1E9A80] hover:bg-[#188f75] text-white p-0"
+            onClick={() => setShowNewMessageModal(!showNewMessageModal)}
+          >
+            <Pencil className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 px-3">
-        <div className="flex flex-col gap-0.5 pb-3">
+      {/* Mobile New Message Modal */}
+      {showNewMessageModal && (
+        <div className="md:hidden fixed inset-0 z-50 bg-white">
+          <div className="flex flex-col h-full">
+            <div className="px-4 py-3 border-b border-zinc-100 flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full"
+                onClick={() => setShowNewMessageModal(false)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+              </Button>
+              <h2 className="text-lg font-bold">New Message</h2>
+            </div>
+            <div className="px-4 py-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                <Input
+                  placeholder="Search people..."
+                  autoFocus
+                  className="pl-10 bg-[#f3f3ee] border-0 rounded-xl h-11 text-sm focus-visible:ring-0"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+            <ScrollArea className="flex-1 px-4">
+              <div className="text-xs font-semibold text-zinc-400 mb-2 uppercase tracking-wider">Suggested</div>
+              {filteredContacts.length > 0 ? (
+                filteredContacts.map((contact) => (
+                  <div
+                    key={contact.id}
+                    className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-[#f3f3ee] active:bg-[#e8e8e3] transition-colors"
+                    onClick={() => {
+                      handleContactClick(contact);
+                      setShowNewMessageModal(false);
+                      setSearchQuery("");
+                    }}
+                  >
+                    <Avatar className="h-11 w-11 border border-zinc-100">
+                      <AvatarImage src={contact.avatar} />
+                      <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <span className="font-medium text-zinc-900">{contact.name}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-sm text-zinc-400">
+                  No contacts found
+                </div>
+              )}
+            </ScrollArea>
+          </div>
+        </div>
+      )}
+
+      <ScrollArea className="flex-1 px-3 md:px-3">
+        <div className="flex flex-col gap-1 md:gap-0.5 pb-20 md:pb-3">
           {isLoading ? (
             // Shimmer loading state
             <>
@@ -205,7 +308,7 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
             sidebarFilteredContacts.map((contact) => (
               <div
                 key={contact.id}
-                className="relative rounded-xl w-[98%] mx-auto"
+                className="relative rounded-xl md:rounded-xl w-full md:w-[98%] md:mx-auto"
               >
                 {/* Unread Button Background (Left) */}
                 <div className="absolute top-0 left-0 bottom-0 w-[64px] flex items-center justify-center z-0">
@@ -239,7 +342,7 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                   onClick={() => handleContactClick(contact)}
                   onContextMenu={(e) => handleContextMenu(e, contact.id)}
                   className={cn(
-                    "group flex items-center gap-2.5 py-2.5 px-1.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10 bg-white",
+                    "group flex items-center gap-3 md:gap-2.5 py-3 md:py-2.5 px-2 md:px-1.5 rounded-xl cursor-pointer transition-all duration-200 ease-in-out relative z-10 bg-white active:bg-[#f3f3ee]",
                     selectedContact?.id === contact.id ? "bg-[#f3f3ee]" : "hover:bg-[#f3f3ee]",
                     archiveId === contact.id ? "w-[calc(100%-68px)] bg-[#f3f3ee]" : "",
                     unreadId === contact.id ? "w-[calc(100%-68px)] ml-auto bg-[#f3f3ee]" : "",
@@ -247,35 +350,35 @@ export const MessageListSidebar: React.FC<MessageListSidebarProps> = ({
                   )}
                 >
                   <div className="relative shrink-0">
-                    <Avatar className="h-10 w-10 border border-zinc-100">
+                    <Avatar className="h-12 w-12 md:h-10 md:w-10 border border-zinc-100">
                       <AvatarImage src={contact.avatar} />
                       <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    {contact.online && (
-                      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                    {(contact.online || contact.isOnline) && (
+                      <span className="absolute bottom-0 right-0 h-3 w-3 md:h-2.5 md:w-2.5 bg-green-500 border-2 border-white rounded-full"></span>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-0.5">
-                      <span className={cn("text-sm", contact.unread ? "font-bold text-zinc-900" : "font-semibold text-zinc-900")}>
+                      <span className={cn("text-[15px] md:text-sm", contact.unread ? "font-bold text-zinc-900" : "font-semibold text-zinc-900")}>
                         {contact.name}
                       </span>
-                      <span className={cn("text-[10px]", contact.unread ? "text-[#1E9A80] font-medium" : "text-zinc-400")}>
+                      <span className={cn("text-xs md:text-[10px]", contact.unread ? "text-[#1E9A80] font-medium" : "text-zinc-400")}>
                         {contact.time}
                       </span>
                     </div>
                     <div className="flex items-center justify-between min-w-0">
-                      <p className={cn("text-xs truncate pr-2 flex-1 w-0", contact.unread ? "text-zinc-900 font-medium" : "text-zinc-500")}>
+                      <p className={cn("text-sm md:text-xs truncate pr-2 flex-1 w-0", contact.unread ? "text-zinc-900 font-medium" : "text-zinc-500")}>
                         {contact.lastMessage}
                       </p>
                       {contact.unread ? (
-                        <div className="h-4 min-w-4 px-1 rounded-full bg-[#1E9A80] flex items-center justify-center shrink-0">
-                          <span className="text-[9px] font-bold text-white">1</span>
+                        <div className="h-5 min-w-5 md:h-4 md:min-w-4 px-1.5 md:px-1 rounded-full bg-[#1E9A80] flex items-center justify-center shrink-0">
+                          <span className="text-[10px] md:text-[9px] font-bold text-white">1</span>
                         </div>
                       ) : contact.status === "read" ? (
-                        <CheckCheck className="h-3 w-3 text-zinc-400 shrink-0" />
+                        <CheckCheck className="h-4 w-4 md:h-3 md:w-3 text-zinc-400 shrink-0" />
                       ) : contact.status === "delivered" ? (
-                        <CheckCheck className="h-3 w-3 text-zinc-300 shrink-0" />
+                        <CheckCheck className="h-4 w-4 md:h-3 md:w-3 text-zinc-300 shrink-0" />
                       ) : null}
                     </div>
                   </div>

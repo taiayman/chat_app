@@ -5,16 +5,9 @@ import {
   Home,
   MessageCircle,
   Compass,
-  Folder,
-  Image as ImageIcon,
   Sparkles,
-  LayoutDashboard,
-  Pencil,
-  Gift,
-  Palette,
+  User,
   LogOut,
-  ChevronLeft,
-  Sun
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -33,6 +26,7 @@ interface SidebarNavProps {
   showProfileMenu: boolean;
   setShowProfileMenu: (show: boolean) => void;
   userImage?: string | null;
+  isMobile?: boolean;
 }
 
 export const SidebarNav: React.FC<SidebarNavProps> = ({
@@ -41,6 +35,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   showProfileMenu,
   setShowProfileMenu,
   userImage,
+  isMobile = false,
 }) => {
   const router = useRouter();
 
@@ -53,6 +48,98 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
     }
   };
 
+  // Mobile Bottom Navigation
+  if (isMobile) {
+    return (
+      <div className="bg-white border-t border-zinc-100 px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        <nav className="flex items-center justify-around">
+          <button
+            className={cn(
+              "flex flex-col items-center gap-1 p-2 rounded-xl transition-all",
+              activeTab === "home" ? "text-[#1E9A80]" : "text-zinc-400"
+            )}
+            onClick={() => setActiveTab("home")}
+          >
+            <Home className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Home</span>
+          </button>
+
+          <button
+            className={cn(
+              "flex flex-col items-center gap-1 p-2 rounded-xl transition-all",
+              activeTab === "chat" ? "text-[#1E9A80]" : "text-zinc-400"
+            )}
+            onClick={() => handleNavigation("chat")}
+          >
+            <MessageCircle className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Chats</span>
+          </button>
+
+          <button
+            className={cn(
+              "flex flex-col items-center gap-1 p-2 rounded-xl transition-all",
+              activeTab === "compass" ? "text-[#1E9A80]" : "text-zinc-400"
+            )}
+            onClick={() => setActiveTab("compass")}
+          >
+            <Compass className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Discover</span>
+          </button>
+
+          <button
+            className={cn(
+              "flex flex-col items-center gap-1 p-2 rounded-xl transition-all",
+              activeTab === "sparkles" ? "text-[#1E9A80]" : "text-zinc-400"
+            )}
+            onClick={() => handleNavigation("sparkles")}
+          >
+            <Sparkles className="h-5 w-5" />
+            <span className="text-[10px] font-medium">AI</span>
+          </button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all">
+                <Avatar className="h-6 w-6 border border-zinc-200">
+                  <AvatarImage src={userImage || undefined} />
+                  <AvatarFallback>
+                    <User className="h-3 w-3 text-zinc-400" />
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-[10px] font-medium text-zinc-400">Profile</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="top" align="end" className="w-64 p-2 rounded-2xl border-none mb-2">
+              <div className="p-3 bg-zinc-50 rounded-xl mx-2 my-1">
+                <div className="text-sm font-semibold mb-1">My Account</div>
+                <div className="flex justify-between text-xs mb-1.5">
+                  <span className="font-medium">Credits</span>
+                  <span className="text-zinc-400">Renews in</span>
+                </div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-lg font-bold">20 left</span>
+                  <span className="text-xs font-medium text-zinc-800">6h 24m</span>
+                </div>
+                <Progress value={80} className="h-1.5 bg-zinc-200" />
+              </div>
+              <Separator className="my-1 bg-zinc-100" />
+              <div className="px-2 py-1.5">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer"
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                >
+                  <LogOut className="h-4 w-4" /> Log out
+                </Button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
+      </div>
+    );
+  }
+
+  // Desktop Vertical Sidebar
   return (
     <div className="flex flex-col items-center justify-between pt-5 pb-6 w-[76px] shrink-0">
       {/* Top Section: Logo + Nav */}
@@ -98,26 +185,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           >
             <Compass className="h-4 w-4 text-[#151515]" />
           </button>
-
-          <button
-            className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
-              activeTab === "folder" ? "bg-white" : "hover:bg-white/50"
-            )}
-            onClick={() => setActiveTab("folder")}
-          >
-            <Folder className="h-4 w-4 text-[#151515]" />
-          </button>
-
-          <button
-            className={cn(
-              "h-10 w-10 rounded-xl flex items-center justify-center transition-all cursor-pointer",
-              activeTab === "image" ? "bg-white" : "hover:bg-white/50"
-            )}
-            onClick={() => setActiveTab("image")}
-          >
-            <ImageIcon className="h-4 w-4 text-[#151515]" />
-          </button>
         </nav>
       </div>
 
@@ -143,21 +210,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="right" align="end" className="w-64 p-2 rounded-2xl border-none ml-2">
-            <div className="px-2 py-1.5">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
-                <LayoutDashboard className="h-4 w-4" /> Go back
-              </Button>
-            </div>
-            <Separator className="my-1 bg-zinc-100" />
-            <div className="px-2 py-1.5">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
-                <Pencil className="h-4 w-4" /> Rename file
-              </Button>
-            </div>
-            <Separator className="my-1 bg-zinc-100" />
             <div className="p-3 bg-zinc-50 rounded-xl mx-2 my-1">
-              <div className="text-sm font-semibold mb-1">testing2</div>
-              <div className="text-xs text-zinc-400 mb-3">testing2@gmail.com</div>
+              <div className="text-sm font-semibold mb-1">My Account</div>
               <div className="flex justify-between text-xs mb-1.5">
                 <span className="font-medium">Credits</span>
                 <span className="text-zinc-400">Renews in</span>
@@ -166,20 +220,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                 <span className="text-lg font-bold">20 left</span>
                 <span className="text-xs font-medium text-zinc-800">6h 24m</span>
               </div>
-              <Progress value={80} className="h-1.5 bg-zinc-200" indicatorClassName="bg-[#00A389]" />
+              <Progress value={80} className="h-1.5 bg-zinc-200" />
               <div className="flex justify-between text-[10px] mt-2 text-zinc-400">
                 <span>5 of 25 used today</span>
                 <span className="text-[#00A389] font-medium">+25 tomorrow</span>
               </div>
-            </div>
-            <Separator className="my-1 bg-zinc-100" />
-            <div className="px-2 py-1.5 space-y-1">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
-                <Gift className="h-4 w-4" /> Win free credits
-              </Button>
-              <Button variant="ghost" className="w-full justify-start gap-2 text-zinc-600 font-medium hover:bg-zinc-50 rounded-xl px-2 cursor-pointer">
-                <Palette className="h-4 w-4" /> Theme Style
-              </Button>
             </div>
             <Separator className="my-1 bg-zinc-100" />
             <div className="px-2 py-1.5">

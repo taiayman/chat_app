@@ -14,7 +14,8 @@ import {
   FileText,
   Camera,
   MapPin,
-  X
+  X,
+  ArrowLeft
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ interface ChatAreaProps {
   };
   isLoading: boolean;
   currentMessages: Message[];
+  onMobileBack?: () => void;
 }
 
 // Shimmer component with beautiful gradient animation
@@ -117,6 +119,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
   isLoading,
   onSendMessage,
   currentMessages,
+  onMobileBack,
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [showChatSearch, setShowChatSearch] = React.useState(false);
@@ -292,47 +295,67 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
   const matchCount = chatSearchQuery.trim() ? filteredMessages.length : 0;
 
   return (
-    <div className="flex-1 bg-white rounded-2xl flex flex-col min-h-0 overflow-hidden">
+    <div className="flex-1 bg-white md:rounded-2xl flex flex-col min-h-0 overflow-hidden">
       {/* Chat Header */}
-      <div className="px-3 py-3 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3 pl-1 cursor-pointer hover:bg-zinc-50 rounded-lg p-1 transition-colors">
-          <Avatar className="h-9 w-9 border border-zinc-100">
-            <AvatarImage src={selectedContact.avatar} />
-            <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="font-bold text-zinc-900 text-sm">{selectedContact.name}</h2>
-            <div className="flex items-center gap-1">
-              <span className={cn("h-1.5 w-1.5 rounded-full", selectedContact.online ? "bg-green-500" : "bg-zinc-300")}></span>
-              <span className={cn("text-[10px] font-medium", selectedContact.online ? "text-green-500" : "text-zinc-400")}>
-                {selectedContact.online ? "Online" : "Offline"}
-              </span>
+      <div className="px-2 md:px-3 py-2 md:py-3 flex items-center justify-between shrink-0 border-b border-zinc-100 md:border-none">
+        {/* Mobile Back Button + Contact Info */}
+        <div className="flex items-center gap-2 md:gap-3 pl-0 md:pl-1">
+          {/* Mobile Back Button */}
+          <button
+            className="md:hidden h-9 w-9 rounded-full flex items-center justify-center hover:bg-zinc-100 active:bg-zinc-200 transition-colors"
+            onClick={onMobileBack}
+          >
+            <ArrowLeft className="h-5 w-5 text-zinc-700" />
+          </button>
+
+          <div className="flex items-center gap-2 md:gap-3 cursor-pointer hover:bg-zinc-50 rounded-lg p-1 transition-colors">
+            <Avatar className="h-10 w-10 md:h-9 md:w-9 border border-zinc-100">
+              <AvatarImage src={selectedContact.avatar} />
+              <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h2 className="font-bold text-zinc-900 text-[15px] md:text-sm">{selectedContact.name}</h2>
+              <div className="flex items-center gap-1">
+                <span className={cn("h-1.5 w-1.5 rounded-full", (selectedContact.online || selectedContact.isOnline) ? "bg-green-500" : "bg-zinc-300")}></span>
+                <span className={cn("text-[11px] md:text-[10px] font-medium", (selectedContact.online || selectedContact.isOnline) ? "text-green-500" : "text-zinc-400")}>
+                  {(selectedContact.online || selectedContact.isOnline) ? "Online" : "Offline"}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 pr-1">
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-1 md:gap-1.5 pr-1">
+          {/* Search - Hidden on mobile unless active */}
           <Button
             variant="outline"
             size="icon"
             className={cn(
-              "h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer",
-              showChatSearch && "bg-zinc-100 border-[#00A389] text-[#00A389]"
+              "h-9 w-9 md:h-8 md:w-8 rounded-full md:rounded-md border-0 md:border md:border-zinc-200 bg-transparent md:bg-white text-zinc-600 md:text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 md:hover:bg-zinc-50 cursor-pointer",
+              showChatSearch && "bg-zinc-100 md:bg-zinc-100 border-[#00A389] text-[#00A389]"
             )}
             onClick={() => {
               setShowChatSearch(!showChatSearch);
               if (showChatSearch) setChatSearchQuery("");
             }}
           >
-            <Search className="h-3.5 w-3.5" />
+            <Search className="h-5 w-5 md:h-3.5 md:w-3.5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
+
+          {/* Phone - Desktop only */}
+          <Button variant="outline" size="icon" className="hidden md:flex h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
             <Phone className="h-3.5 w-3.5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
-            <Video className="h-3.5 w-3.5" />
+
+          {/* Video Call */}
+          <Button variant="outline" size="icon" className="h-9 w-9 md:h-8 md:w-8 rounded-full md:rounded-md border-0 md:border md:border-zinc-200 bg-transparent md:bg-white text-zinc-600 md:text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 md:hover:bg-zinc-50 cursor-pointer">
+            <Video className="h-5 w-5 md:h-3.5 md:w-3.5" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-md border-zinc-200 bg-white text-zinc-800 hover:text-zinc-900 hover:bg-zinc-50 cursor-pointer">
-            <MoreHorizontal className="h-3.5 w-3.5" />
+
+          {/* More Options */}
+          <Button variant="outline" size="icon" className="h-9 w-9 md:h-8 md:w-8 rounded-full md:rounded-md border-0 md:border md:border-zinc-200 bg-transparent md:bg-white text-zinc-600 md:text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 md:hover:bg-zinc-50 cursor-pointer">
+            <MoreHorizontal className="h-5 w-5 md:h-3.5 md:w-3.5" />
           </Button>
         </div>
       </div>
@@ -358,7 +381,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
       )}
 
       {/* Chat Messages */}
-      <div className="flex-1 bg-[#f3f3ee] rounded-xl mx-2 my-2 min-h-0 overflow-hidden">
+      <div className="flex-1 bg-[#f3f3ee] md:rounded-xl md:mx-2 md:my-2 min-h-0 overflow-hidden">
         {isLoading ? (
           <MessageShimmer />
         ) : (
@@ -377,7 +400,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
 
                 return (
                   <div key={msg.id} className={cn("flex", msg.sender === "me" ? "justify-end" : "justify-start")}>
-                    <div className={cn("flex flex-col gap-0.5 max-w-[70%]", msg.sender === "me" ? "items-end" : "items-start")}>
+                    <div className={cn("flex flex-col gap-0.5 max-w-[85%] md:max-w-[70%]", msg.sender === "me" ? "items-end" : "items-start")}>
                       {imageUrl ? (
                         <div className={cn(
                           "rounded-2xl overflow-hidden",
@@ -400,7 +423,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
                         </div>
                       ) : (
                         <div className={cn(
-                          "px-4 py-2.5 rounded-2xl text-sm leading-relaxed",
+                          "px-4 py-2.5 rounded-2xl text-[15px] md:text-sm leading-relaxed",
                           msg.sender === "me"
                             ? "bg-[#E8F5F3] text-zinc-800 rounded-br-sm"
                             : "bg-white text-zinc-800 rounded-bl-sm border border-zinc-100"
@@ -425,7 +448,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
       </div>
 
       {/* Input Area */}
-      <div className="px-4 pt-1 pb-3 bg-white shrink-0">
+      <div className="px-3 md:px-4 pt-2 md:pt-1 pb-20 md:pb-3 bg-white shrink-0">
         {isRecording ? (
           /* Recording UI */
           <div className="flex items-center gap-3 h-12 bg-[#f3f3ee] rounded-full px-4">
@@ -520,8 +543,8 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
 
             <Input
               ref={inputRef}
-              placeholder="Type any message..."
-              className="w-full h-12 pl-4 pr-36 rounded-full border-2 border-[#F2F2F0] bg-white text-sm placeholder:text-[#8696A0]"
+              placeholder="Type a message..."
+              className="w-full h-12 pl-4 pr-36 rounded-full border-2 border-[#F2F2F0] bg-white text-[15px] md:text-sm placeholder:text-[#8696A0]"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -532,12 +555,12 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
                 onClick={startRecording}
                 className="text-zinc-800 hover:text-[#00A884] transition-colors cursor-pointer"
               >
-                <Mic className="h-4 w-4" />
+                <Mic className="h-5 w-5 md:h-4 md:w-4" />
               </button>
               <button
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 className={cn(
-                  "transition-colors cursor-pointer",
+                  "transition-colors cursor-pointer hidden md:block",
                   showEmojiPicker ? "text-[#00A884]" : "text-zinc-800 hover:text-zinc-900"
                 )}
               >
@@ -551,7 +574,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
                     showAttachmentPicker ? "text-[#00A884]" : "text-zinc-800 hover:text-zinc-900"
                   )}
                 >
-                  <Paperclip className="h-4 w-4" />
+                  <Paperclip className="h-5 w-5 md:h-4 md:w-4" />
                 </button>
 
                 {/* Attachment Picker */}
@@ -615,7 +638,7 @@ export const ChatArea: React.FC<ChatAreaProps & { onSendMessage: (content: strin
                 )}
               </div>
               <Button
-                className="h-9 w-9 rounded-full bg-[#00A884] hover:bg-[#128C7E] text-white flex items-center justify-center p-0 cursor-pointer"
+                className="h-10 w-10 md:h-9 md:w-9 rounded-full bg-[#00A884] hover:bg-[#128C7E] text-white flex items-center justify-center p-0 cursor-pointer"
                 onClick={selectedFile ? sendFileMessage : handleSend}
               >
                 <Send className="h-4 w-4" />
